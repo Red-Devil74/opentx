@@ -1678,67 +1678,6 @@ void ShowEepromWarnings(QWidget *parent, const QString &title, unsigned long err
   msgBox.exec();
 }
 
-unsigned long LoadEeprom(RadioData &radioData, const uint8_t *eeprom, const int size)
-{
-  std::bitset<NUM_ERRORS> errors;
-
-  foreach(EEPROMInterface *eepromInterface, eepromInterfaces) {
-    std::bitset<NUM_ERRORS> result((unsigned long long)eepromInterface->load(radioData, eeprom, size));
-    if (result.test(ALL_OK)) {
-      return result.to_ulong();
-    }
-    else {
-      errors |= result;
-    }
-  }
-
-  if (errors.none()) {
-    errors.set(UNKNOWN_ERROR);
-  }
-  return errors.to_ulong();
-}
-
-unsigned long LoadBackup(RadioData & radioData, uint8_t * eeprom, int size, int index)
-{
-  std::bitset<NUM_ERRORS> errors;
-
-  foreach(EEPROMInterface *eepromInterface, eepromInterfaces) {
-    std::bitset<NUM_ERRORS> result((unsigned long long)eepromInterface->loadBackup(radioData, eeprom, size, index));
-    if (result.test(ALL_OK)) {
-      return result.to_ulong();
-    }
-    else {
-      errors |= result;
-    }
-  }
-
-  if (errors.none()) {
-    errors.set(UNKNOWN_ERROR);
-  }
-  return errors.to_ulong();
-}
-
-
-unsigned long LoadEepromXml(RadioData & radioData, QDomDocument & doc)
-{
-  std::bitset<NUM_ERRORS> errors;
-
-  foreach(EEPROMInterface *eepromInterface, eepromInterfaces) {
-    std::bitset<NUM_ERRORS> result((unsigned long long)eepromInterface->loadxml(radioData, doc));
-    if (result.test(ALL_OK)) {
-      return result.to_ulong();
-    }
-    else {
-      errors |= result;
-    }
-  }
-
-  if (errors.none()) {
-    errors.set(UNKNOWN_ERROR);
-  }
-  return errors.to_ulong();
-}
-
 QString getBoardName(BoardEnum board)
 {
   switch (board) {
